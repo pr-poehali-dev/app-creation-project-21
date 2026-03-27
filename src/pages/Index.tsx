@@ -130,15 +130,7 @@ export default function Index() {
   return (
     <div className="w-screen h-screen overflow-hidden relative flex flex-col" style={{ fontFamily: "'Exo 2', sans-serif" }}>
       {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <img src={BG_IMAGE} className="w-full h-full object-cover" alt="bg" />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0f1e]/95 via-[#0a0f1e]/80 to-[#0a0f1e]/70" />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 50% at 50% 100%, rgba(0,112,243,0.12), transparent)" }} />
-        <div className="absolute inset-0 opacity-5" style={{
-          backgroundImage: "linear-gradient(rgba(0,229,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.5) 1px, transparent 1px)",
-          backgroundSize: "40px 40px"
-        }} />
-      </div>
+      <div className="absolute inset-0 z-0" style={{ background: "#0a0f1e" }} />
 
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between px-6 py-3" style={{ borderBottom: "1px solid rgba(0,229,255,0.1)" }}>
@@ -277,10 +269,27 @@ export default function Index() {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-3">
-                  {isLaunching ? (
-                    <div className="glass-card rounded-2xl p-4">
-                      <div className="flex items-center justify-between mb-2">
+                {/* Spacer to push button to bottom */}
+                <div className="flex-1" />
+
+                {/* Bottom: button + progress */}
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={handleLaunch}
+                    disabled={isLaunching}
+                    className="btn-neon rounded-2xl px-8 py-3 text-base relative overflow-hidden shrink-0"
+                    style={{ minWidth: 160, opacity: isLaunching ? 0.7 : 1 }}
+                  >
+                    <div className="scan-overlay" />
+                    <div className="flex items-center gap-2">
+                      <Icon name={isLaunching ? "Loader" : "Download"} size={16} className={isLaunching ? "animate-spin" : ""} />
+                      {isLaunching ? "ЗАПУСК..." : launchProgress === 0 ? "УСТАНОВИТЬ" : "ИГРАТЬ"}
+                    </div>
+                  </button>
+
+                  {isLaunching && (
+                    <div className="flex-1 animate-fade-in">
+                      <div className="flex items-center justify-between mb-1.5">
                         <span className="text-xs text-cyan-300">{launchStatus}</span>
                         <span className="text-xs opacity-40">{Math.round(launchProgress)}%</span>
                       </div>
@@ -288,14 +297,6 @@ export default function Index() {
                         <div className="progress-bar-fill h-full rounded-full" style={{ width: `${launchProgress}%` }} />
                       </div>
                     </div>
-                  ) : (
-                    <button onClick={handleLaunch} className="btn-neon rounded-2xl py-4 text-base animate-glow-pulse relative overflow-hidden">
-                      <div className="scan-overlay" />
-                      <div className="flex items-center justify-center gap-2">
-                        <Icon name="Play" size={18} />
-                        ИГРАТЬ
-                      </div>
-                    </button>
                   )}
                 </div>
               </div>
