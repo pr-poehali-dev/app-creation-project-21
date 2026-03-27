@@ -52,7 +52,7 @@ const CHAT_MESSAGES = [
   { id: 5, user: "Система", text: "Сервер Arizona RP перезагрузился", time: "14:36", color: "#ffaa00" },
 ];
 
-type Tab = "play" | "servers" | "news" | "settings";
+type Tab = "play" | "news" | "settings";
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>("play");
@@ -188,6 +188,14 @@ export default function Index() {
 
         {/* Right controls */}
         <div className="flex items-center gap-2">
+          {/* Nickname inline */}
+          <input
+            className="input-neon px-3 py-1 rounded-lg text-xs w-36"
+            value={nickname}
+            onChange={e => setNickname(e.target.value)}
+            placeholder="Никнейм..."
+            maxLength={24}
+          />
           <div className="flex items-center gap-1.5 px-2 py-1 rounded-md glass-card text-xs">
             <div className="w-1.5 h-1.5 rounded-full status-online animate-pulse" />
             <span className="text-cyan-300 opacity-70">Online</span>
@@ -207,7 +215,6 @@ export default function Index() {
         <nav className="w-16 flex flex-col items-center py-4 gap-1" style={{ borderRight: "1px solid rgba(0,229,255,0.08)" }}>
           {([
             { id: "play", icon: "Play", label: "Играть" },
-            { id: "servers", icon: "Server", label: "Серверы" },
             { id: "news", icon: "Newspaper", label: "Новости" },
             { id: "settings", icon: "Settings", label: "Настройки" },
           ] as { id: Tab; icon: string; label: string }[]).map(item => (
@@ -236,25 +243,10 @@ export default function Index() {
           {activeTab === "play" && (
             <div className="h-full flex gap-4 animate-fade-in">
               <div className="flex-1 flex flex-col gap-4">
-                <div className="glass-card rounded-2xl p-4">
-                  <div className="text-[10px] uppercase tracking-widest opacity-40 mb-2">Никнейм</div>
-                  <input
-                    className="input-neon w-full px-3 py-2 rounded-xl text-sm"
-                    value={nickname}
-                    onChange={e => setNickname(e.target.value)}
-                    placeholder="Введи никнейм..."
-                    maxLength={24}
-                  />
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <Icon name="Info" size={11} className="opacity-30" />
-                    <span className="text-[10px] opacity-30">Пробелы заменятся на подчёркивание</span>
-                  </div>
-                </div>
-
                 {/* Spacer to push button to bottom */}
                 <div className="flex-1" />
 
-                {/* Bottom: button + server selector + progress */}
+                {/* Bottom: button + progress */}
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handleLaunch}
@@ -268,24 +260,6 @@ export default function Index() {
                       {isLaunching ? "ЗАПУСК..." : launchProgress === 0 ? "УСТАНОВИТЬ" : "ИГРАТЬ"}
                     </div>
                   </button>
-
-                  {/* Server selector inline */}
-                  {!isLaunching && (
-                    <div className="glass-card rounded-2xl px-3 py-2 flex items-center gap-2 cursor-pointer group relative" style={{ minWidth: 200 }}
-                      onClick={() => setActiveTab("servers")}
-                    >
-                      <span className="text-base shrink-0">{selectedServer.country}</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-xs font-semibold text-cyan-100 truncate" style={{ fontFamily: "Rajdhani, sans-serif" }}>{selectedServer.name}</div>
-                        <div className="flex items-center gap-2 text-[10px]">
-                          <span className="opacity-40">{selectedServer.ping}ms</span>
-                          <span className="opacity-40">·</span>
-                          <span className="opacity-40">{selectedServer.players}</span>
-                        </div>
-                      </div>
-                      <Icon name="ChevronRight" size={12} className="opacity-30 group-hover:opacity-70 transition-opacity shrink-0" />
-                    </div>
-                  )}
 
                   {isLaunching && (
                     <div className="flex-1 animate-fade-in">
@@ -332,69 +306,6 @@ export default function Index() {
                     />
                   </button>
                 </div>
-              </div>
-            </div>
-          )}
-
-          {/* SERVERS TAB */}
-          {activeTab === "servers" && (
-            <div className="h-full flex flex-col gap-3 animate-fade-in">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-bold text-cyan-100" style={{ fontFamily: "Rajdhani, sans-serif", fontSize: 18, letterSpacing: "0.05em" }}>СЕРВЕРЫ</div>
-                  <div className="text-[11px] opacity-40">{SERVERS.length} серверов найдено</div>
-                </div>
-                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs glass-card hover:border-cyan-400/40 transition-colors" style={{ color: "#00e5ff" }}>
-                  <Icon name="RefreshCw" size={11} /> Обновить
-                </button>
-              </div>
-
-              <div className="grid gap-2 text-[10px] uppercase tracking-wider opacity-40 px-4" style={{ gridTemplateColumns: "1fr 120px 100px 60px 80px" }}>
-                <span>Название</span><span>Игроки</span><span>Режим</span><span>Пинг</span><span>Действие</span>
-              </div>
-
-              <div className="flex-1 overflow-y-auto pr-1 space-y-2">
-                {SERVERS.map((srv, i) => (
-                  <div
-                    key={srv.id}
-                    onClick={() => setSelectedServer(srv)}
-                    className={`glass-card rounded-xl px-4 py-3 cursor-pointer transition-all animate-slide-in ${selectedServer.id === srv.id ? "tab-active" : "hover:bg-white/5"}`}
-                    style={{ animationDelay: `${i * 0.05}s` }}
-                  >
-                    <div className="grid items-center gap-2" style={{ gridTemplateColumns: "1fr 120px 100px 60px 80px" }}>
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span className="text-base">{srv.country}</span>
-                        <div className="min-w-0">
-                          <div className="text-xs font-semibold text-cyan-100 truncate" style={{ fontFamily: "Rajdhani, sans-serif" }}>{srv.name}</div>
-                          <div className="text-[10px] opacity-30 truncate">{srv.ip}</div>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-cyan-300">{srv.players}</div>
-                        <div className="h-1 rounded-full mt-1 overflow-hidden" style={{ background: "rgba(0,229,255,0.1)" }}>
-                          <div
-                            className="h-full rounded-full"
-                            style={{
-                              width: `${(parseInt(srv.players.split("/")[0]) / parseInt(srv.players.split("/")[1])) * 100}%`,
-                              background: "linear-gradient(90deg, #0070f3, #00e5ff)"
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <span className="text-[11px] opacity-60">{srv.mode}</span>
-                      <span className="text-[11px]" style={{ color: srv.ping < 30 ? "#00ff88" : srv.ping < 60 ? "#ffaa00" : "#ff4444" }}>
-                        {srv.ping}ms
-                      </span>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setSelectedServer(srv); setActiveTab("play"); }}
-                        className="text-[10px] px-2 py-1 rounded-lg font-bold transition-all"
-                        style={{ background: "rgba(0,229,255,0.1)", border: "1px solid rgba(0,229,255,0.2)", color: "#00e5ff", fontFamily: "Rajdhani, sans-serif" }}
-                      >
-                        ИГРАТЬ
-                      </button>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           )}
