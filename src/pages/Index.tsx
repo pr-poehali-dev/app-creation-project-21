@@ -52,7 +52,7 @@ const CHAT_MESSAGES = [
   { id: 5, user: "Система", text: "Сервер Arizona RP перезагрузился", time: "14:36", color: "#ffaa00" },
 ];
 
-type Tab = "play" | "servers" | "news" | "chat" | "settings";
+type Tab = "play" | "servers" | "news" | "settings";
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>("play");
@@ -209,7 +209,6 @@ export default function Index() {
             { id: "play", icon: "Play", label: "Играть" },
             { id: "servers", icon: "Server", label: "Серверы" },
             { id: "news", icon: "Newspaper", label: "Новости" },
-            { id: "chat", icon: "MessageCircle", label: "Чат" },
             { id: "settings", icon: "Settings", label: "Настройки" },
           ] as { id: Tab; icon: string; label: string }[]).map(item => (
             <button
@@ -238,23 +237,6 @@ export default function Index() {
             <div className="h-full flex gap-4 animate-fade-in">
               <div className="flex-1 flex flex-col gap-4">
                 <div className="glass-card rounded-2xl p-4">
-                  <div className="text-[10px] uppercase tracking-widest opacity-40 mb-3">Текущий сервер</div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg glass-card">
-                      {selectedServer.country}
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-bold text-cyan-100" style={{ fontFamily: "Rajdhani, sans-serif", fontSize: 16 }}>{selectedServer.name}</div>
-                      <div className="text-[11px] opacity-40">{selectedServer.ip}</div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-xs font-semibold text-cyan-400">{selectedServer.players}</div>
-                      <div className="text-[10px] opacity-40">{selectedServer.ping}ms</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="glass-card rounded-2xl p-4">
                   <div className="text-[10px] uppercase tracking-widest opacity-40 mb-2">Никнейм</div>
                   <input
                     className="input-neon w-full px-3 py-2 rounded-xl text-sm"
@@ -272,8 +254,8 @@ export default function Index() {
                 {/* Spacer to push button to bottom */}
                 <div className="flex-1" />
 
-                {/* Bottom: button + progress */}
-                <div className="flex items-center gap-4">
+                {/* Bottom: button + server selector + progress */}
+                <div className="flex items-center gap-3">
                   <button
                     onClick={handleLaunch}
                     disabled={isLaunching}
@@ -286,6 +268,24 @@ export default function Index() {
                       {isLaunching ? "ЗАПУСК..." : launchProgress === 0 ? "УСТАНОВИТЬ" : "ИГРАТЬ"}
                     </div>
                   </button>
+
+                  {/* Server selector inline */}
+                  {!isLaunching && (
+                    <div className="glass-card rounded-2xl px-3 py-2 flex items-center gap-2 cursor-pointer group relative" style={{ minWidth: 200 }}
+                      onClick={() => setActiveTab("servers")}
+                    >
+                      <span className="text-base shrink-0">{selectedServer.country}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-semibold text-cyan-100 truncate" style={{ fontFamily: "Rajdhani, sans-serif" }}>{selectedServer.name}</div>
+                        <div className="flex items-center gap-2 text-[10px]">
+                          <span className="opacity-40">{selectedServer.ping}ms</span>
+                          <span className="opacity-40">·</span>
+                          <span className="opacity-40">{selectedServer.players}</span>
+                        </div>
+                      </div>
+                      <Icon name="ChevronRight" size={12} className="opacity-30 group-hover:opacity-70 transition-opacity shrink-0" />
+                    </div>
+                  )}
 
                   {isLaunching && (
                     <div className="flex-1 animate-fade-in">
@@ -432,48 +432,6 @@ export default function Index() {
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
-          )}
-
-          {/* CHAT TAB */}
-          {activeTab === "chat" && (
-            <div className="h-full flex flex-col gap-3 animate-fade-in">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-bold text-cyan-100" style={{ fontFamily: "Rajdhani, sans-serif", fontSize: 18, letterSpacing: "0.05em" }}>ОБЩИЙ ЧАТ</div>
-                  <div className="text-[11px] opacity-40">247 пользователей онлайн</div>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full status-online" />
-                  <span className="text-[11px] text-green-400">Подключён</span>
-                </div>
-              </div>
-
-              <div
-                ref={chatRef}
-                className="flex-1 overflow-y-auto space-y-1 pr-1 glass-card rounded-2xl p-3"
-              >
-                {messages.map((msg) => (
-                  <div key={msg.id} className="flex gap-2 text-xs items-start py-0.5">
-                    <span className="opacity-30 text-[10px] mt-0.5 w-10 shrink-0">{msg.time}</span>
-                    <span className="font-bold shrink-0" style={{ color: msg.color }}>{msg.user}:</span>
-                    <span className="opacity-70 break-all">{msg.text}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex gap-2">
-                <input
-                  className="input-neon flex-1 px-3 py-2 rounded-xl text-sm"
-                  placeholder="Написать сообщение..."
-                  value={chatInput}
-                  onChange={e => setChatInput(e.target.value)}
-                  onKeyDown={e => e.key === "Enter" && handleSendChat()}
-                />
-                <button onClick={handleSendChat} className="btn-neon px-4 rounded-xl">
-                  <Icon name="Send" size={14} />
-                </button>
               </div>
             </div>
           )}
