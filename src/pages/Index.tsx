@@ -303,54 +303,6 @@ export default function Index() {
 
               <div className="w-64 flex flex-col gap-4">
                 <div className="glass-card rounded-2xl p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="text-[10px] uppercase tracking-widest opacity-40">Файлы игры</div>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: "rgba(0,255,136,0.1)", color: "#00ff88" }}>
-                      {downloadProgress >= 100 ? "Готово" : "Нужно обновить"}
-                    </span>
-                  </div>
-                  <div className="mb-3">
-                    <div className="flex justify-between text-[11px] mb-1.5">
-                      <span className="opacity-50">GTA SA + SAMP 0.3.7</span>
-                      <span className="text-cyan-400">{Math.min(100, Math.round(downloadProgress))}%</span>
-                    </div>
-                    <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(0,229,255,0.1)" }}>
-                      <div className="progress-bar-fill h-full rounded-full transition-all" style={{ width: `${Math.min(100, downloadProgress)}%` }} />
-                    </div>
-                  </div>
-                  <div className="text-[10px] opacity-40 mb-3">3.2 GB / 4.5 GB</div>
-                  {downloadProgress < 100 ? (
-                    <button
-                      onClick={handleDownload}
-                      className="w-full py-2 rounded-xl text-xs font-bold transition-all"
-                      style={{
-                        background: isDownloading ? "rgba(0,229,255,0.05)" : "rgba(0,229,255,0.1)",
-                        border: "1px solid rgba(0,229,255,0.2)",
-                        color: "#00e5ff",
-                        fontFamily: "Rajdhani, sans-serif",
-                        letterSpacing: "0.05em"
-                      }}
-                    >
-                      {isDownloading ? (
-                        <span className="flex items-center justify-center gap-1.5">
-                          <Icon name="Download" size={12} className="animate-bounce" />
-                          ЗАГРУЗКА...
-                        </span>
-                      ) : (
-                        <span className="flex items-center justify-center gap-1.5">
-                          <Icon name="Download" size={12} />
-                          СКАЧАТЬ
-                        </span>
-                      )}
-                    </button>
-                  ) : (
-                    <div className="w-full py-2 rounded-xl text-xs font-bold text-center" style={{ background: "rgba(0,255,136,0.05)", border: "1px solid rgba(0,255,136,0.2)", color: "#00ff88", fontFamily: "Rajdhani, sans-serif" }}>
-                      ✓ ФАЙЛЫ В ПОРЯДКЕ
-                    </div>
-                  )}
-                </div>
-
-                <div className="glass-card rounded-2xl p-4">
                   <div className="text-[10px] uppercase tracking-widest opacity-40 mb-3">Статистика</div>
                   {[
                     { label: "Сыграно часов", value: "847" },
