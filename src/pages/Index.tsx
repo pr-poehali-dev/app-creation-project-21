@@ -82,23 +82,10 @@ export default function Index() {
     "Запуск клиента...",
   ];
 
+  const INSTALL_URL = "https://drive.google.com/drive/folders/1HN-VJuAdgW3kpnEazheorntMGAPh3vaU?usp=sharing";
+
   const handleLaunch = () => {
-    if (isLaunching) return;
-    setIsLaunching(true);
-    setLaunchProgress(0);
-    let step = 0;
-    setLaunchStatus(launchSteps[0]);
-    const interval = setInterval(() => {
-      step++;
-      setLaunchProgress((step / launchSteps.length) * 100);
-      if (step < launchSteps.length) {
-        setLaunchStatus(launchSteps[step]);
-      } else {
-        clearInterval(interval);
-        setLaunchStatus("Запущено! Удачной игры 🎮");
-        setTimeout(() => { setIsLaunching(false); setLaunchProgress(0); setLaunchStatus(""); }, 2000);
-      }
-    }, 900);
+    window.open(INSTALL_URL, "_blank");
   };
 
   const handleDownload = () => {
@@ -206,32 +193,19 @@ export default function Index() {
                 {/* Spacer to push button to bottom */}
                 <div className="flex-1" />
 
-                {/* Bottom: button + progress */}
+                {/* Bottom: button */}
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handleLaunch}
-                    disabled={isLaunching}
-                    className="btn-neon rounded-2xl px-8 py-3 text-base relative overflow-hidden shrink-0"
-                    style={{ minWidth: 160, opacity: isLaunching ? 0.7 : 1 }}
+                    className="btn-neon rounded-2xl px-8 py-3 text-base relative overflow-hidden shrink-0 animate-glow-pulse"
+                    style={{ minWidth: 160 }}
                   >
                     <div className="scan-overlay" />
                     <div className="flex items-center gap-2">
-                      <Icon name={isLaunching ? "Loader" : "Download"} size={16} className={isLaunching ? "animate-spin" : ""} />
-                      {isLaunching ? "ЗАПУСК..." : launchProgress === 0 ? "УСТАНОВИТЬ" : "ИГРАТЬ"}
+                      <Icon name="Download" size={16} />
+                      УСТАНОВИТЬ
                     </div>
                   </button>
-
-                  {isLaunching && (
-                    <div className="flex-1 animate-fade-in">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-xs text-cyan-300">{launchStatus}</span>
-                        <span className="text-xs opacity-40">{Math.round(launchProgress)}%</span>
-                      </div>
-                      <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(0,229,255,0.1)" }}>
-                        <div className="progress-bar-fill h-full rounded-full" style={{ width: `${launchProgress}%` }} />
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
 
