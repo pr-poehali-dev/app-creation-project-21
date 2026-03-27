@@ -144,45 +144,7 @@ export default function Index() {
           </div>
         </div>
 
-        {/* Account switcher */}
-        <div className="relative">
-          <button
-            onClick={() => setShowAccountMenu(!showAccountMenu)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all glass-card hover:border-cyan-500/40"
-          >
-            <span className="text-lg">{activeAccount.avatar}</span>
-            <div className="text-left">
-              <div className="text-xs font-semibold text-cyan-300 leading-none">{activeAccount.name}</div>
-              <div className="text-[10px] opacity-50 mt-0.5">Мультиаккаунт</div>
-            </div>
-            <div className={`w-2 h-2 rounded-full ml-1 ${activeAccount.status === "online" ? "status-online" : activeAccount.status === "away" ? "status-away" : "status-offline"}`} />
-            <Icon name="ChevronDown" size={12} className="opacity-50 ml-1" />
-          </button>
 
-          {showAccountMenu && (
-            <div className="absolute right-0 top-full mt-2 w-52 rounded-xl overflow-hidden z-50 animate-fade-in glass-card" style={{ border: "1px solid rgba(0,229,255,0.2)" }}>
-              {ACCOUNTS.map(acc => (
-                <button
-                  key={acc.id}
-                  onClick={() => { setActiveAccount(acc); setNickname(acc.name); setShowAccountMenu(false); }}
-                  className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition-colors text-left ${activeAccount.id === acc.id ? "bg-cyan-500/10" : ""}`}
-                >
-                  <span className="text-base">{acc.avatar}</span>
-                  <div>
-                    <div className="text-xs font-semibold text-cyan-100">{acc.name}</div>
-                    <div className="text-[10px] opacity-40">{acc.status === "online" ? "В сети" : acc.status === "away" ? "Отошёл" : "Не в сети"}</div>
-                  </div>
-                  <div className={`w-2 h-2 rounded-full ml-auto ${acc.status === "online" ? "status-online" : acc.status === "away" ? "status-away" : "status-offline"}`} />
-                </button>
-              ))}
-              <div style={{ borderTop: "1px solid rgba(0,229,255,0.1)" }}>
-                <button className="w-full flex items-center gap-2 px-4 py-2.5 hover:bg-white/5 transition-colors text-xs text-cyan-400">
-                  <Icon name="Plus" size={12} /> Добавить аккаунт
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
 
         {/* Right controls */}
         <div className="flex items-center gap-2">
@@ -293,21 +255,12 @@ export default function Index() {
                   ))}
                 </div>
 
-                <div className="glass-card rounded-2xl p-3 flex items-center justify-between">
+                <div className="glass-card rounded-2xl p-3 flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full shrink-0" style={{ background: "linear-gradient(135deg, #00e5ff, #0070f3)" }} />
                   <div>
                     <div className="text-xs font-semibold text-cyan-100">Авто-обновление</div>
-                    <div className="text-[10px] opacity-40">Проверять при запуске</div>
+                    <div className="text-[10px] opacity-40">Включено</div>
                   </div>
-                  <button
-                    onClick={() => setSettings(s => ({ ...s, autoUpdate: !s.autoUpdate }))}
-                    className="w-10 h-5 rounded-full relative transition-all shrink-0"
-                    style={{ background: settings.autoUpdate ? "linear-gradient(135deg, #00e5ff, #0070f3)" : "rgba(255,255,255,0.1)" }}
-                  >
-                    <div
-                      className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all shadow-md"
-                      style={{ left: settings.autoUpdate ? "calc(100% - 18px)" : "2px" }}
-                    />
-                  </button>
                 </div>
               </div>
             </div>
