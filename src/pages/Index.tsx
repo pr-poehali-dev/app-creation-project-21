@@ -10,11 +10,9 @@ const ACCOUNTS = [
 ];
 
 const SERVERS = [
-  { id: 1, name: "Arizona RP", ip: "37.230.210.120", players: "1842/2048", ping: 22, mode: "Roleplay", country: "🇷🇺" },
-  { id: 2, name: "Advance RP", ip: "195.93.252.38", players: "987/1200", ping: 35, mode: "Roleplay", country: "🇷🇺" },
-  { id: 3, name: "GTA5RP Classic", ip: "185.174.136.27", players: "543/800", ping: 18, mode: "MiniGame", country: "🇩🇪" },
-  { id: 4, name: "Black Russia", ip: "5.101.78.12", players: "2001/2048", ping: 41, mode: "Roleplay", country: "🇷🇺" },
-  { id: 5, name: "RedLine RP", ip: "194.67.211.40", players: "312/500", ping: 55, mode: "Roleplay", country: "🇺🇦" },
+  { id: 1, name: "ТЕСТ", ip: "188.127.241.8:1130", players: "0/1000", ping: 0, locked: false },
+  { id: 2, name: "ЗАКРЫТО", ip: "", players: "—", ping: 0, locked: true },
+  { id: 3, name: "ЗАКРЫТО", ip: "", players: "—", ping: 0, locked: true },
 ];
 
 const NEWS = [
@@ -58,7 +56,7 @@ export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>("play");
   const [activeAccount, setActiveAccount] = useState(ACCOUNTS[0]);
   const [nickname, setNickname] = useState("ProGamer_228");
-  const [selectedServer, setSelectedServer] = useState(SERVERS[0]);
+  const [selectedServer, setSelectedServer] = useState(SERVERS.find(s => !s.locked)!);
   const [isLaunching, setIsLaunching] = useState(false);
   const [launchProgress, setLaunchProgress] = useState(0);
   const [launchStatus, setLaunchStatus] = useState("");
@@ -277,15 +275,20 @@ export default function Index() {
 
               <div className="w-64 flex flex-col gap-4">
                 <div className="glass-card rounded-2xl p-4">
-                  <div className="text-[10px] uppercase tracking-widest opacity-40 mb-3">Статистика</div>
-                  {[
-                    { label: "Сыграно часов", value: "847" },
-                    { label: "Серверов посещено", value: "12" },
-                    { label: "Аккаунтов", value: "3" },
-                  ].map(stat => (
-                    <div key={stat.label} className="flex justify-between items-center py-1.5" style={{ borderBottom: "1px solid rgba(0,229,255,0.06)" }}>
-                      <span className="text-[11px] opacity-50">{stat.label}</span>
-                      <span className="text-xs font-bold text-cyan-300" style={{ fontFamily: "Rajdhani, sans-serif" }}>{stat.value}</span>
+                  <div className="text-[10px] uppercase tracking-widest opacity-40 mb-3">Серверы</div>
+                  {SERVERS.map(srv => (
+                    <div
+                      key={srv.id}
+                      onClick={() => !srv.locked && setSelectedServer(srv)}
+                      className={`flex items-center gap-3 py-2 transition-all rounded-xl px-2 -mx-2 ${srv.locked ? "opacity-30 cursor-not-allowed" : "cursor-pointer hover:bg-white/5"} ${selectedServer.id === srv.id && !srv.locked ? "bg-cyan-500/10" : ""}`}
+                      style={{ borderBottom: "1px solid rgba(0,229,255,0.06)" }}
+                    >
+                      <Icon name={srv.locked ? "Lock" : "Server"} size={13} className={srv.locked ? "opacity-40" : "text-cyan-400"} />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-semibold truncate" style={{ fontFamily: "Rajdhani, sans-serif", color: srv.locked ? "rgba(255,255,255,0.3)" : "#e0f7ff" }}>{srv.name}</div>
+                        {!srv.locked && <div className="text-[10px] opacity-40">{srv.ip}</div>}
+                      </div>
+                      {!srv.locked && <span className="text-[10px] text-cyan-400 shrink-0">{srv.players}</span>}
                     </div>
                   ))}
                 </div>
